@@ -1,0 +1,19 @@
+@import '../../node_modules/jquery-nice-select/css/nice-select';
+
+.calc-price {
+    &__title {
+
+    }
+
+    #select-two {
+        display: none;
+    }
+}
+
+[visible="false"] {
+    display: none;
+}
+
+.nice-select {
+    float: unset;
+}
