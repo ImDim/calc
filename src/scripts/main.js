@@ -25,7 +25,6 @@ function createList(menu) {
     $('.js-catprice').append('<div class="summary-price">0</div>');
 }
 
-
 $(document).ready(function() {
     $(document).on('change', '#select-price', function() {
         let _this = $(this);
@@ -49,6 +48,8 @@ $(document).ready(function() {
 
     createList(menu);
     $('select').niceSelect();
-    var id = $($('#select-price')[0].selectedOptions[0]).attr('data-item-id');
-    $(`[data-nice-select-id="${id}"]`).change();
+    if ($('#select-price').length) {
+        var id = $($('#select-price')[0].selectedOptions[0]).attr('data-item-id');
+        $(`[data-nice-select-id="${id}"]`).change();
+    }
 });

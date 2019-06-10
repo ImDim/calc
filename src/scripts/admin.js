@@ -7,7 +7,10 @@ function createList(menu) {
     let $sp = $('#select-price');
 
     for (let item of menu) {
-        $sp.append(`<li class="catprice-list__item" data-item-id="${item.id}">${item.title} <span onclick="catpriceDel(this)">Удалить</span></li>`);
+        $sp.append(`<li class="catprice-list__item" data-item-id="${item.id}">
+            <span class="js-item-text" contenteditable="true">${item.title}</span>
+            <span onclick="catpriceDel(this)">Удалить</span>
+            </li>`);
 
         if (item.menu.length) {
             $(`[data-item-id="${item.id}"]`).append(`
@@ -20,8 +23,8 @@ function createList(menu) {
             for (let subItem of item.menu) {
                 list.append(`<li 
                     class="catprice-list__item">
-                    ${subItem.title}
-                    <span class="catprice-list__price">${subItem.price}</span>
+                    <span class="js-item-text" contenteditable="true">${subItem.title}</span>
+                    <span class="catprice-list__price" contenteditable="true">${subItem.price}</span>
                     <span onclick="catpriceDel(this)">Удалить</span>
                 </li>`);
             }
@@ -40,16 +43,17 @@ function createList(menu) {
 window.catpriceAddItem = function(_this) {
     $(_this).before(`<li 
         class="catprice-list__item">
-        Название
-        <span class="catprice-list__price">0</span>
+        <span class="js-item-text" contenteditable="true">Название</span>
+        <span class="catprice-list__price" contenteditable="true">0</span>
         <span onclick="catpriceDel(this)">Удалить</span>
     </li>`);
-    console.info(_this)
 }
 
 window.catpriceAddList = function(_this) {
     ++window.catpriceID;
-    $('#select-price').append(`<li class="catprice-list__item" data-item-id="${window.catpriceID}"> Новый список <span onclick="catpriceDel(this)">Удалить</span>
+    $('#select-price').append(`<li class="catprice-list__item" data-item-id="${window.catpriceID}"> 
+        <span class="js-item-text" contenteditable="true">Новый список</span>
+        <span onclick="catpriceDel(this)">Удалить</span>
         <ul class="catprice-list-admin"
             data-subselect="true" 
             data-nice-select-id="${window.catpriceID}">
@@ -58,12 +62,39 @@ window.catpriceAddList = function(_this) {
     </li>`);
 
 }
+window.savePricelist = function() {
+    var newPricelist = [];
+    var $list = $('#select-price');
+    var $items = $('#select-price > .catprice-list__item');
+
+    $items.each((i, item) => {
+        var $item = $(item);
+        
+        var subList = [];
+        $item.find('.catprice-list__item').each((k, subItem) => {
+            var $subItem = $(subItem);
+            if ($subItem.find('.js-item-text').text()) {
+                subList.push({
+                    title: $subItem.find('.js-item-text').text(),
+                    price: $subItem.find('.catprice-list__price').text()
+                });
+            }
+        });
+
+        newPricelist.push({
+            id: $item.data('item-id'),
+            title: $item.find('.js-item-text').eq(0).text(),
+            menu: subList
+        });
+    });
+
+    console.info(newPricelist);
+}
+
 window.catpriceDel = function(_this) {
     $(_this).parent('*').remove();
 }
 
 $(document).ready(function() {
     createList(menu);
-    
-    
 });
